@@ -1,0 +1,28 @@
+{
+  "manifest_version": 2,
+
+  "name": "ProFuse Wikipedia Adapter",
+  "description": "This extension helps to keep wikipedia articles up to date.",
+  "version": "0.1",
+
+  "page_action": {
+    "default_icon": "pf-icon.png",
+	"default_title": "ProFuse"
+  },
+  "permissions" : [
+    "tabs", "http://*/*", "https://*/*"
+  ],
+  "content_scripts": [
+      {
+		"matches": ["http://en.wikipedia.org/wiki/*"],
+        "css": ["style.css"],
+        "js": ["jquery-1.10.2.min.js", "jquery-ui-1.10.3.custom.min.js", "content.js"]
+      }
+    ],
+    "web_accessible_resources": [
+       "jquery-1.10.2.min.map"
+     ],
+   "background": {
+	   "scripts": ["background.js"]
+   }
+}

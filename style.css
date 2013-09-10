@@ -1,0 +1,16 @@
+#pfinfo{
+	position: absolute;
+	top: -46px;
+	display: block !important;
+	cursor:pointer;
+	font-weight:bold;
+	right:0px;
+}
+#pfdetail{
+	margin:15px 0px;
+	background-color:white;
+	border:1px solid #000000;
+	padding: 15px;
+	display:none;
+}
+
