@@ -1,9 +1,14 @@
 #pfinfo{
-	position: absolute;
-	top: -46px;
-	display: block !important;
-	cursor:pointer;
 	font-weight:bold;
+}
+#ticker{
+	position: absolute;
+	z-index: 1000;
+	padding: 5px;
+	background-color: white;
+	border: 1px solid #000000;
+	top: -54px;
+	display: block !important;
 	right:0px;
 }
 #pfdetail{
@@ -14,3 +19,10 @@
 	display:none;
 }
 
+#ajaxloader{
+	display:none;
+}
+
+.pointer{
+	cursor:pointer;
+}

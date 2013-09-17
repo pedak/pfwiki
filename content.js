@@ -1,19 +1,19 @@
 // ProFuse Wikipedia Adapter 
-// v0.1
+// v0.12
 // Peter Kalchgruber
 // University of Vienna
 
 
 bootstrap();
 var equals={};
-start(document.URL);
-debug=1; 
 
 function bootstrap(){
 	// injects html div and infobar into webpage
-	
-	$('<div id="pfinfo">No Updates</div>').insertBefore('#siteSub');
+	var imgURL = chrome.extension.getURL("ajax-loader.gif");
+	$('<div id="ticker"><span id="pfinfo">No Updates</span> <img id="ajaxloader" src="'+imgURL+'	"/>').insertBefore('#siteSub');
+	$('#ticker').append('<div id="pfajax"><span id="numpend">0</span> pending requests</div></div>');
 	$('<div id="pfdetail">Loading...</div>').insertBefore('#mw-content-text');
+	start(document.URL);
 }
 
 function start(url){
@@ -31,15 +31,6 @@ function callback_sameas(data){
 	// callback of sameas ajax call
 	
 	duplicates=data[0].duplicates;
-	
-	// for debugging
-	if(debug){
-		duplicates={}
-		// duplicates[0]="http://dbpedia.org/resource/Austria";
-		// duplicates[1]="http://data.nytimes.com/sweden_geo";
-		duplicates[2]="http://localhost/profuse/c1.php";
-		duplicates[3]="http://kalchgruber.com/c1.php?id=14";
-	}
 	queryEquals(duplicates);
 }
 
@@ -61,6 +52,7 @@ function queryEquals(duplicates){
 				beforeSend: function (xhr){ 
 				        xhr.setRequestHeader("Content-Type","application/rdf+xml","text/xml","application/xml");
 				        xhr.setRequestHeader("Accept","application/rdf+xml","text/xml","application/xml");
+						updatePendingTicker(1);
 					},
 				url: url,
 				ifModified: true,
@@ -70,6 +62,7 @@ function queryEquals(duplicates){
 					}
 				},
 				complete: function(data,status){
+					updatePendingTicker(-1);
 		       		if(status=="notmodified"){
 						console.log("Not modified: " + " url");
 					}
@@ -83,6 +76,18 @@ function queryEquals(duplicates){
 	});
 }
 
+function updatePendingTicker(val){
+	//updates pending requests ticker to current pending requests number
+	
+	curval=parseInt($('#numpend').text());
+	curval+=val;
+	$('#numpend').text(curval);
+	if(curval>0){
+		$('#ajaxloader').css("display","inline");
+	}else{
+		$('#ajaxloader').css("display","none");
+	}
+}
 
 function equal_success(url,data){
 	// callback function of equals call
@@ -114,8 +119,10 @@ function updateFE(){
 		$("#pfinfo").text("No Updates available!").off('click');
 		$("#pfdetail").html("");
 		$("#pfdetail").slideUp();
+		$('#ticker').removeClass("pointer");
 	}else if(length>0){
 		chrome.extension.sendRequest({}, function(response) {});
+		$('#ticker').addClass("pointer");
 		var s='';
 		if (length==1){
 			$("#pfinfo").text("One Update available!").click(function(){$('#pfdetail').slideDown()});
